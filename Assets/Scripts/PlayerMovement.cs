@@ -2,79 +2,79 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 10f; // Movement speed
-    public float jumpForce = 10f; // Jump force
-    public bool isOnGround = true; // Whether the player is on the ground (default to true)
+    public float speed = 90f; // how fast the player moves
+    public float jumpForce = 10f; // how high the player jumps
+    public bool isOnGround = true; // checks if the player is on the ground (default is true)
     private Rigidbody rb;
     private Animator animator;
 
-    public bool gameOver = false; // Flag to track if the game is over
+    public bool gameOver = false; // tracks if the game is over
 
     void Start()
     {
-        // Get the Rigidbody and Animator components
+        // grab the Rigidbody and Animator components attached to the player
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        // If the game is over, stop movement and don't process any further actions
+        // if the game is over, stop the player from moving or doing anything
         if (gameOver)
         {
-            return; // Exit the update method early if the game is over
+            return; // exit early if the game is over
         }
 
-        // Handle horizontal movement (A/D or Left/Right arrow keys)
+        // get player input for horizontal movement (A/D or Left/Right arrow keys)
         float moveHorizontal = Input.GetAxis("Horizontal");
 
-        // Calculate the movement vector along the X-axis
+        // create the movement vector along the X-axis based on input and speed
         Vector3 movement = new Vector3(moveHorizontal, 0, 0) * speed;
 
-        // Apply the movement to the Rigidbody (keep Y velocity to prevent falling)
+        // apply the movement to the Rigidbody (keep the Y velocity for falling)
         rb.velocity = new Vector3(movement.x, rb.velocity.y, rb.velocity.z);
 
-        // Set the Speed parameter in Animator (positive for forward, negative for backward)
+        // update the Animator with the movement speed for animations (positive for forward, negative for backward)
         if (animator != null)
         {
             animator.SetFloat("Speed", moveHorizontal);
         }
 
-        // Handle jumping (only if player is on the ground)
+        // check for jump input (spacebar) and if the player is on the ground
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
         {
-            Jump();
+            Jump(); // make the player jump
         }
     }
 
     private void Jump()
     {
-        // Apply an upward force to simulate jumping
+        // apply an upward force to simulate the jump
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-        // Set isOnGround to false to prevent further jumps until landing
+        // set isOnGround to false to prevent another jump while in the air
         isOnGround = false;
 
-        // Optionally, trigger a jump animation (you can customize this as needed)
+        // trigger a jump animation if one exists
         if (animator != null)
         {
             animator.SetTrigger("Jump_trig");
         }
     }
 
-    // This method is called when the player collides with something
+    // this method is called when the player collides with something
     void OnCollisionEnter(Collision collision)
     {
-        // Check if the player is colliding with the ground (or anything you consider ground)
+        // check if the player is colliding with the ground
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = true; // Set isOnGround to true when the player touches the ground
+            isOnGround = true; // player is back on the ground, so allow jumping again
         }
 
-        // Check if the player is colliding with the "Killbox"
+        // check if the player collides with a "Killbox" (e.g., area that ends the game)
         if (collision.gameObject.CompareTag("Killbox") && !gameOver)
         {
-            gameOver = true; // Set gameOver to true when the player touches the killbox
+            gameOver = true; // set the game over flag if the player hits a killbox
         }
     }
 }

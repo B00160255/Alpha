@@ -2,34 +2,39 @@ using UnityEngine;
 
 public class DroneSpawnManager : MonoBehaviour
 {
-    public GameObject dronePrefab;  // Reference to the Drone prefab
-    public float spawnDistance = 5f; // How close or far the drones spawn from the player
-    public float spawnHeight = 5f;   // The height where the drones will spawn
+    public GameObject Drone;  // gets the model for the drone
+    public float spawnDistanceMin = 20f; // minimum distance the drones will spawn from the player
+    public float spawnDistanceMax = 30f; // maximum distance the drones will spawn from the player
+    public float spawnHeightMin = 5f;   // minimum height where the drones will spawn
+    public float spawnHeightMax = 10f;  // maximum height where the drones will spawn
 
-    private Transform player;  // Reference to the player's transform
+    private Transform player;  // gets the players position
 
-    // Start is called before the first frame update
     void Start()
     {
-        // Find the player in the scene
+        // find the player in the scene
         player = GameObject.FindWithTag("Player").transform;
 
-        // Start spawning drones repeatedly
-        InvokeRepeating("SpawnDrone", 2f, 3f); // Spawn every 3 seconds after 2 seconds delay
+        // start spawning drones repeatedly
+        InvokeRepeating("SpawnDrone", 2f, 3f); // spawn drones every 3 seconds after 2 seconds delay
     }
 
-    // Spawn drone near the player
+    // this makes drones spawn near the player
     void SpawnDrone()
     {
-        // Ensure the player exists
+        // ensure the player exists
         if (player != null)
         {
-            // Spawn drone at a random position close to the player
-            float spawnX = player.position.x + Random.Range(-spawnDistance, spawnDistance); // Random spawn X position near player
-            Vector3 spawnPos = new Vector3(spawnX, spawnHeight, player.position.z); // Keep Z the same, modify Y for height
+            // spawn drones at a random position further away from the player
+            float spawnX = player.position.x + Random.Range(spawnDistanceMin, spawnDistanceMax); // random spawn X position away from player
+            float spawnY = Random.Range(spawnHeightMin, spawnHeightMax); // random height between the min and max Y range
+            float spawnZ = player.position.z; // this keeps Z the same as the player, or modifies it if needed
 
-            // Instantiate the drone at the random spawn position
-            Instantiate(dronePrefab, spawnPos, Quaternion.identity);
+            // this will create the spawn position
+            Vector3 spawnPos = new Vector3(spawnX, spawnY, spawnZ);
+
+            // instantiate the drone at the random spawn position
+            Instantiate(Drone, spawnPos, Quaternion.identity);
         }
     }
 }

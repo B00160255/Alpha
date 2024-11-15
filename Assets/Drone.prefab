@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d325e2478367e0447a82a4ede08a8b35, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d325e2478367e0447a82a4ede08a8b35, type: 3}
       propertyPath: m_LocalPosition.x
       value: 19.59
@@ -90,6 +94,8 @@ MonoBehaviour:
   detectionRange: 10
   attackRange: 2
   hoverHeight: 5
+  damageAmount: 1
+  damageInterval: 1
 --- !u!208 &1321694204970744028
 NavMeshObstacle:
   m_ObjectHideFlags: 0
